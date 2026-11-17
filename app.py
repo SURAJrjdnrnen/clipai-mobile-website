@@ -55,8 +55,12 @@ def transcribe(path: Path, language: str):
     model = get_model()
     lang = None if language == "auto" else language
     segments, info = model.transcribe(
-        str(path), language=lang, beam_size=3, vad_filter=True,
-        word_timestamps=False
+        str(path),
+        language=lang,
+        beam_size=1,
+        vad_filter=True,
+        word_timestamps=False,
+        condition_on_previous_text=False
     )
     rows = []
     for seg in segments:
