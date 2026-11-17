@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#090b12">
+  <title>ClipAI — AI Shorts Maker</title>
+  <style>
+    :root{color-scheme:dark;--bg:#090b12;--panel:#121725;--muted:#9aa6bd;--line:#263148;--accent:#8b5cf6;--accent2:#22d3ee}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 85% 0%,#24204b 0,transparent 35%),var(--bg);color:#f7f8fc;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+    .wrap{width:min(760px,100%);margin:auto;padding:22px 16px 50px}
+    header{display:flex;align-items:center;gap:12px;margin:8px 0 26px}.logo{width:44px;height:44px;border-radius:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:22px;font-weight:900}
+    h1{font-size:24px;margin:0;letter-spacing:-.7px} header p{margin:3px 0 0;color:var(--muted);font-size:13px}
+    .hero{margin-bottom:20px}.eyebrow{color:#c4b5fd;font-size:11px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}
+    .hero h2{font-size:clamp(28px,7vw,42px);line-height:1.06;letter-spacing:-1.5px;margin:9px 0}.hero h2 span{background:linear-gradient(90deg,#c4b5fd,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{color:var(--muted);line-height:1.55;margin:0;font-size:14px}
+    .panel{background:rgba(18,23,37,.94);border:1px solid var(--line);border-radius:22px;padding:17px;margin:15px 0;box-shadow:0 16px 50px #0003}
+    .panel-title{font-size:15px;font-weight:800;margin:0 0 13px}.drop{border:1.5px dashed #53617e;border-radius:17px;padding:25px 14px;text-align:center;background:#0c1220}
+    .upload-icon{font-size:34px}.drop strong{display:block;margin:8px 0 4px}.drop small{color:var(--muted)}
+    input[type=file]{display:none}.pick{display:inline-block;margin-top:14px;background:#242d42;border:1px solid #45536e;border-radius:12px;padding:11px 16px;font-size:13px;font-weight:750}
+    .filename{font-size:12px;color:#a5f3fc;margin-top:10px;word-break:break-word}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}
+    select{width:100%;background:#0c1220;border:1px solid var(--line);border-radius:11px;padding:12px;color:#f7f8fc;font-size:14px;outline:none}
+    .features{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.feature{font-size:12px;color:#d5def0;background:#0d1422;border:1px solid #202c42;padding:10px;border-radius:11px}
+    .feature b{color:#a5f3fc;margin-right:5px}
+    button{width:100%;border:0;border-radius:14px;padding:15px 18px;margin-top:16px;color:#fff;font-size:15px;font-weight:850;background:linear-gradient(100deg,#7c3aed,#2563eb);box-shadow:0 8px 24px #4f46e555}
+    button:disabled{opacity:.55}
+    .note{font-size:11px;color:var(--muted);line-height:1.5;margin:12px 2px 0}
+    .status{display:none;margin-top:16px;padding:14px;border-radius:13px;background:#0b1422;border:1px solid #29405a;font-size:13px;color:#c8d8ee}
+    .status.show{display:block}.bar{height:6px;background:#202c42;border-radius:20px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;width:35%;background:linear-gradient(90deg,#8b5cf6,#22d3ee);border-radius:20px;animation:move 1.5s infinite alternate}
+    @keyframes move{from{transform:translateX(-20%)}to{transform:translateX(190%)}}
+    .clip{border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:12px;background:#0d1320}.clip video{width:100%;max-height:520px;aspect-ratio:9/16;object-fit:contain;background:#000;border-radius:10px}
+    .clip-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:4px 0 10px}.clip-head strong{font-size:14px}.score{font-size:11px;color:#a5f3fc;background:#102b39;padding:5px 8px;border-radius:20px}
+    .download{display:block;text-align:center;text-decoration:none;background:#1b2940;color:#fff;border:1px solid #344763;border-radius:11px;padding:11px;margin-top:10px;font-size:13px;font-weight:800}
+    .hidden{display:none}.footer{text-align:center;color:#75829a;font-size:11px;margin:24px 0 0}
+    @media(max-width:390px){.grid{grid-template-columns:1fr 1fr}.panel{padding:14px}.features{gap:7px}.feature{font-size:11px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header><div class="logo">✂</div><div><h1>ClipAI</h1><p>Turn long videos into scroll-stopping Shorts</p></div></header>
+  <section class="hero"><div class="eyebrow">AI-powered video clipping</div><h2>Long video in.<br><span>Viral clips out.</span></h2><p>Upload a video. ClipAI finds promising moments, adds Hindi/English captions and exports vertical 1080p clips.</p></section>
+
+  <section class="panel">
+    <h3 class="panel-title">01 · Upload your video</h3>
+    <div class="drop" id="drop">
+      <div class="upload-icon">🎬</div><strong>Choose a video from your phone</strong><small>MP4, MOV, WEBM or MKV</small>
+      <label class="pick" for="video">Select video</label>
+      <input id="video" type="file" accept="video/mp4,video/quicktime,video/webm,video/x-matroska">
+      <div class="filename" id="filename"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h3 class="panel-title">02 · Clip settings</h3>
+    <div class="grid">
+      <div class="field"><label for="language">Caption language</label><select id="language"><option value="auto">Auto detect</option><option value="hi">Hindi</option><option value="en">English</option></select></div>
+      <div class="field"><label for="count">Number of clips</label><select id="count"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option></select></div>
+      <div class="field"><label for="min">Minimum length</label><select id="min"><option value="10">10 sec</option><option value="15" selected>15 sec</option><option value="20">20 sec</option><option value="30">30 sec</option></select></div>
+      <div class="field"><label for="max">Maximum length</label><select id="max"><option value="30">30 sec</option><option value="45" selected>45 sec</option><option value="60">60 sec</option><option value="90">90 sec</option></select></div>
+      <div class="field" style="grid-column:1/-1"><label for="style">Caption & effect style</label><select id="style"><option value="punchy">Punchy — bold captions + colour boost</option><option value="clean">Clean — simple white captions</option><option value="neon">Neon — yellow captions + colour boost</option></select></div>
+    </div>
+    <div class="features">
+      <div class="feature"><b>✓</b> AI highlight scoring</div><div class="feature"><b>✓</b> Hindi / English captions</div>
+      <div class="feature"><b>✓</b> 9:16 vertical crop</div><div class="feature"><b>✓</b> 1080 × 1920 export</div>
+      <div class="feature"><b>✓</b> Auto emoji captions</div><div class="feature"><b>✓</b> MP4 downloads</div>
+    </div>
+    <button id="start">✨ Find my best clips</button>
+    <p class="note">Processing happens on the server and may take a few minutes. Upload only videos you own or have permission to edit. This starter version scores moments using transcript signals; advanced semantic viral ranking can be added in the next version.</p>
+    <div class="status" id="status"><strong id="statusText">Uploading your video…</strong><div class="bar"><i></i></div></div>
+  </section>
+
+  <section class="panel hidden" id="results"><h3 class="panel-title">03 · Your clips</h3><div id="clipList"></div></section>
+  <div class="footer">ClipAI Mobile · MVP v0.1 · Built for phone screens</div>
+</div>
+<script>
+const fileInput=document.getElementById('video'), filename=document.getElementById('filename');
+const startBtn=document.getElementById('start'), statusBox=document.getElementById('status'), statusText=document.getElementById('statusText');
+const results=document.getElementById('results'), clipList=document.getElementById('clipList');
+fileInput.addEventListener('change',()=>{filename.textContent=fileInput.files[0]?fileInput.files[0].name:'';});
+document.getElementById('drop').addEventListener('dragover',e=>e.preventDefault());
+document.getElementById('drop').addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length){fileInput.files=e.dataTransfer.files;filename.textContent=fileInput.files[0].name;}});
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+startBtn.addEventListener('click',async()=>{
+  const file=fileInput.files[0];
+  if(!file){alert('पहले अपने मोबाइल से वीडियो चुनें।');return;}
+  const min=Number(document.getElementById('min').value), max=Number(document.getElementById('max').value);
+  if(min>max){alert('Maximum length, minimum length से ज्यादा रखें।');return;}
+  startBtn.disabled=true;results.classList.add('hidden');clipList.innerHTML='';statusBox.classList.add('show');
+  statusText.textContent='Uploading video…';
+  try{
+    const data=new FormData();data.append('video',file);data.append('language',document.getElementById('language').value);
+    data.append('min_seconds',min);data.append('max_seconds',max);data.append('max_clips',document.getElementById('count').value);
+    data.append('caption_style',document.getElementById('style').value);
+    const response=await fetch('/api/jobs',{method:'POST',body:data});
+    if(!response.ok)throw new Error((await response.json()).detail||'Upload failed');
+    const {job_id}=await response.json();
+    let done=false;
+    while(!done){
+      await wait(2500);
+      const poll=await fetch('/api/jobs/'+job_id);
+      if(!poll.ok)throw new Error('Job status could not be loaded.');
+      const job=await poll.json();
+      const labels={queued:'Waiting for processing…',transcribing:'AI is listening and creating captions…',finding_highlights:'Finding the strongest moments…',completed:'Your clips are ready!',failed:'Processing failed.'};
+      statusText.textContent=labels[job.status]||job.status.replaceAll('_',' ');
+      if(job.status==='completed'){
+        done=true;results.classList.remove('hidden');
+        job.clips.forEach((clip,i)=>{
+          const card=document.createElement('div');card.className='clip';
+          const title=document.createElement('div');title.className='clip-head';
+          const name=document.createElement('strong');name.textContent=clip.title+' · '+clip.duration+' sec';
+          const score=document.createElement('span');score.className='score';score.textContent='Moment score '+clip.score;
+          title.append(name,score);
+          const video=document.createElement('video');video.controls=true;video.playsInline=true;video.src=clip.url;
+          const link=document.createElement('a');link.className='download';link.href=clip.url;link.download='ClipAI-'+(i+1)+'.mp4';link.textContent='⬇ Download 1080p MP4';
+          card.append(title,video,link);clipList.append(card);
+        });
+        statusText.textContent='Done! Scroll down to preview and download your clips.';
+      }else if(job.status==='failed'){done=true;throw new Error(job.error||'Processing failed');}
+    }
+  }catch(err){statusText.textContent='Error: '+err.message;alert(err.message);}
+  finally{startBtn.disabled=false;}
+});
+</script>
+</body>
+</html>
